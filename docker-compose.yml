@@ -18,6 +18,8 @@ services:
       ports:
         - 3001:3001
       command: npm run start
+      environment: 
+       - DATABASE_URL = postgres://postgres:81005496@postgres:5432/mydatabase
 
     mongodb:
       image: mongo:latest
@@ -27,20 +29,26 @@ services:
       volumes:
         - dbdata-volume:/data/mongodb
       environment:
-        MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
-        MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
-        MONGO_INITDB_DATABASE: ${MONGODB_DATABASE}
+        - MONGO_INITDB_ROOT_USERNAME = ${MONGODB_USER}
+        - MONGO_INITDB_ROOT_PASSWORD = ${MONGODB_PASSWORD}
+        - MONGO_INITDB_DATABASE = ${MONGODB_DATABASE}
+        
 
     postgres:
       image: postgres
       restart: always
       env_file:
         - .env
+      hostname: postgres
       environment:
-        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-        POSTGRES_DB: ${POSTGRES_DB}
+        - POSTGRES_PASSWORD = ${POSTGRES_PASSWORD}
+        - POSTGRES_DB = ${POSTGRES_DB}
+        - POSTGRES_HOST = postgres
+        - POSTGRES_PORT = 5432
       volumes:
         - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+        
 
 volumes:
   dbdata-volume:
+
